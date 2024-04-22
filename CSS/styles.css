@@ -1,0 +1,90 @@
+/* Colors*/
+:root{
+    --main-bg-color: #E3ECF3;
+    --primary-btn: #90A252;
+    --main-border: 2px solid #325871;
+    --platforms: #3D585C;
+
+}
+
+* {
+margin: 0;
+padding: 0;
+}
+
+/* Fonts*/
+
+h1,h2,h3{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+}
+body{
+    background-color: var(--main-bg-color);
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+#board{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    align-content: end;
+
+}
+#player{
+    position: absolute;
+    bottom: 0vw;
+    left: 0vh;
+    z-index: 1000;
+}
+
+.guide{
+    width: 40%;
+    height: 80%;
+    border:var(--main-border);
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 32px;
+    border-radius: 24px;
+}
+.primary-btn {
+    background-color: var(--primary-btn);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    text-decoration: none;
+    text-align: center;
+
+}
+
+.start-platform {
+    position: fixed;
+    top: 64%;
+    width: 24%;
+    height: 36%;
+    background-color: var(--platforms);
+    border-radius: 24px 24px 0px 0px;
+
+    
+}
+
+.plank{
+    background-color: var(--platforms);
+    position: relative;
+}
+.platform {
+    background-color: var(--platforms);
+    position: fixed;
+    border-radius: 24px 24px 0px 0px
+}

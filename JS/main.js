@@ -18,20 +18,19 @@ class Player {
  
     }
     moveLeft() {
-        if (this.positionX > 0) {
-            this.positionX--;
-            this.playerElm.style.left = this.positionX + "vw";
-        }
+
     }
 }
 class Plank {
     constructor() {
         this.height = 24;
         this.width = 120;
-        this.positionX = 50;
-        this.positionY = 38;
+        this.positionX = 20;
+        this.positionY = 36;
         this.plankElm = null;
         this.createDomElement();
+        this.addEventListeners();
+
     };
     createDomElement() {
         this.plankElm = document.createElement("div");
@@ -42,6 +41,29 @@ class Plank {
         this.plankElm.style.height = this.height + "px";
         const parentElm = document.getElementById("board");
         parentElm.appendChild(this.plankElm);
+    };
+    addEventListeners() {
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && !this.spaceDownTime) {
+                this.spaceDownTime = new Date();
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Space' && this.spaceDownTime) {
+                this.spaceUpTime = new Date();
+                let duration = this.spaceUpTime - this.spaceDownTime;
+                this.growPlank(duration);
+                this.spaceDownTime = null; // Reset the down time for the next press
+            }
+        });
+    }
+
+    growPlank(duration) {
+        if (this.width > 0) {
+            this.width += duration * 0.05 ;
+            this.plankElm.style.width = this.width + "px";
+        }
     }
 }
 class Platform {
@@ -79,11 +101,3 @@ const platform = new Platform();
 
 //EVENT LISTENER
 
-document.addEventListener("keydown", (e) => {
-    if (e.code === "ArrowLeft") {
-        player.moveLeft();
-    } else if (e.code === "ArrowRight") {
-        player.moveRight();
-
-    }
-})

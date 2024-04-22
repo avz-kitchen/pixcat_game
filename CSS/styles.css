@@ -75,13 +75,12 @@ body{
     height: 36%;
     background-color: var(--platforms);
     border-radius: 24px 24px 0px 0px;
-
-    
 }
 
 .plank{
     background-color: var(--platforms);
     position: relative;
+    border-radius: 24px;
 }
 .platform {
     background-color: var(--platforms);

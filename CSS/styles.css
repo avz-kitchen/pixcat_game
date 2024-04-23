@@ -20,10 +20,12 @@
     margin: 0;
     padding: 0;
 }
+
 @font-face {
     font-family: 'Jersey 25';
     src: url('CSS/Jersey_25/Jersey25-Regular.ttf') format('truetype');
 }
+
 /* Fonts*/
 .jersey-25-regular {
     font-family: "Jersey 25", sans-serif;
@@ -51,15 +53,19 @@ a {
     text-decoration: none;
     text-transform: uppercase;
 }
-p, li{
+
+p,
+li {
     font-family: Barlow;
-font-size: 24px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
+
 body {
     background-image: url("../images/Background.png");
+    background-repeat: no-repeat;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -69,7 +75,7 @@ body {
     width: 100vw;
     height: 100vh;
     color: var(--dark-text);
-    
+
 }
 
 #board {
@@ -146,6 +152,6 @@ body {
 
 .platform {
     background-color: var(--platforms);
-    position: fixed;
-    border-radius: 24px 24px 0px 0px
+
+    position: absolute;
 }

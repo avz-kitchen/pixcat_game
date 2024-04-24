@@ -1,39 +1,37 @@
 class Cat {
-    constructor(positionX, score) {
+    constructor() {
 
         this.width = 80;
         this.height = 80;
         this.positionX = 0 + this.width; // Default Location
         this.positionY = 40; // Start Position
         this.score = 0;
-        this.catElm = this.createACat();
+        this.cat = document.createElement("div");
+        this.cat.id = "cat";
 
-    }
+        this.cat.style.position = "absolute";
+        this.cat.style.left = this.positionX + "px";
+        this.cat.style.bottom = this.positionY + "vh";
 
-    createACat() {
-        const catElm = document.createElement("div");
-        catElm.id = "cat";
-
-        catElm.style.position = "absolute";
-        catElm.style.left = this.positionX + "px";
-        catElm.style.bottom = this.positionY + "vh";
-
-        catElm.style.backgroundImage = "url('../images/kitty.png')";
-        catElm.style.backgroundSize = "cover";
+        this.cat.style.backgroundImage = "url('../images/kitty.png')";
+        this.cat.style.backgroundSize = "cover";
 
 
         const parentElm = document.getElementById("board");
-        parentElm.appendChild(catElm);
+        parentElm.appendChild(this.cat);
+    }
+
+    createACat() {
+
+ 
         console.log("Cat is on screen.");
     }
 
 
-    moveCat() {
-
-
-    }
-
 }
+ let pathLength = 120;
+
+
 
 class Path {
     constructor(positionX, width) {
@@ -41,14 +39,8 @@ class Path {
         this.positionY = cat.positionY;
         this.width = 120;
         this.height = 24;
-        this.path = this.startPath(); // Initialize path property
+        this.path =  document.createElement("div"); // Initialize path property
         this.lengthActive = false;
-        this.getLength();
-    }
-
-    startPath() {
-        // Create a path element
-        this.path = document.createElement("div");
         this.path.className = "path";
 
         // Set position based on properties
@@ -63,37 +55,17 @@ class Path {
         const parentElm = document.getElementById("board");
         parentElm.appendChild(this.path);
 
+    }
+
+    startPath() {
+        // Create a path element
+
         console.log(`Here is the start Point X: ${this.positionX} and the path is : ${this.width} px long`)
     }
 
-    getLength() {
-        this.lengthActive = true;
-        let length = 0;
 
-        document.addEventListener('keydown', event => {
-            if (event.code === 'Space') {
-                length++;
-                console.log(`I am counting the space down`);
 
-            }
-        });
 
-        document.addEventListener('keyup', event => {
-            if (event.code === 'Space') {
-                console.log(`Spacebar pressed ${length} times`);
-                this.width += length;
-                this.updatePathWidth();
-                length = 0;
-            }
-        });
-    }
-    updatePathWidth(width) {
-        if (this.path === this.lengthActive) {
-            this.path.style.width = this.width + "px";
-            console.log(`Path width has changed to ${this.width} `);
-
-        }
-    }
 }
 
 
@@ -128,7 +100,20 @@ class SafeArea {
 
 //USER MOVEMENT
 
+function drawPath(pathElement,amount){
+    pathElement.width += amount;
+    pathElement.path.style.width = pathElement.width + "px"
 
+}
+function moveCat(catElement,pathElement){
+    const newPositionX = pathElement.positionX + pathElement.width - catElement.width;
+
+    // Update the position of the cat element
+    catElement.positionX = newPositionX;
+    catElement.cat.style.left = newPositionX + "px";
+
+    console.log(`cat is moving ${newPositionX}`)
+}
 
 function isCatOnSafeArea() {
     if (cat.positionX < safeArea.positionX + safeArea.width &&
@@ -148,6 +133,32 @@ function isCatOnSafeArea() {
 const safeAreaA = new SafeArea(0, 400); // Create platforms first
 const safeAreaB = new SafeArea(80, 120); // 
 const cat = new Cat(); // Then create cat
+
 const path = new Path();
 
+
+
+function increasePathLength() {
+    document.addEventListener('keydown', event => {
+        if (event.code === 'Space') {
+            pathLength++; // Increase path length
+            console.log(`I am counting the space down`);
+            drawPath(path,pathLength)
+            moveCat(cat,pathLength)
+        }
+    });
+}
+
+increasePathLength(); // Call the function to activate the event listener
+
+document.addEventListener('keyup', event => {
+    if (event.code === 'Space') {
+        console.log(`The length is ${pathLength} px`);
+        // Update width using the increased path length
+        path.width += pathLength;
+        cat.positionX += pathLength;
+        console.log(`The new width is ${pathLength} px`);
+        pathLength = 0; // Reset path length
+    }
+});
 

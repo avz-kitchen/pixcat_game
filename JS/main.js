@@ -4,14 +4,15 @@ class Player {
 
         this.width = 80;
         this.height = 80;
-        this.positionX = plank.getTheNewWidth() - this.width; // Default Location
-        this.positionY = plank.startLocation(); // Start Position of Y
+        this.positionX =  0 + this.width; // Default Location
+        this.positionY = 36; // Start Position of Y
         this.points = 0;
         this.life = 1;
         this.playerElm = this.createAPlayer();
         this.moveInterval = null;
         this.detectSafeArea();
-this.createAPlayer()
+        this.newLocation= 0;
+this.createAPlayer();
         this.newLocation(() => {
             document.addEventListener('keydown', (event) => {
                 if (event.code === 'Space' && !this.moveInterval) {
@@ -38,7 +39,7 @@ this.createAPlayer()
         playerElm.style.height = this.height + "px";
         playerElm.style.position = "absolute";
         playerElm.style.left = this.positionX + "px";
-        playerElm.style.bottom = this.positionY + "px";
+        playerElm.style.bottom = this.positionY + "vh";
         playerElm.style.backgroundImage = "url('./images/kitty.png')";
         playerElm.style.backgroundSize = "cover";
         const parentElm = document.getElementById("board");
@@ -75,7 +76,20 @@ class Plank {
         this.height = 24;
         this.width = 120;
         this.positionX = 0; // Initial X
+        this.positionY = 36;
+        this.createPlankElement();
     }
+    createPlankElement() {
+        this.plankElm = document.createElement("div");
+        this.plankElm.className = "plank";
+        this.plankElm.style.left = this.positionX + "%";
+        this.plankElm.style.bottom = this.positionY + "%";
+        this.plankElm.style.width = this.width + "px";
+        this.plankElm.style.height = this.height + "px";
+
+        const parentElm = document.getElementById("board");
+        parentElm.appendChild(this.plankElm);
+    };
 
     drawPlank() {
         document.addEventListener('keydown', (event) => {

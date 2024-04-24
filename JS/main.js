@@ -20,7 +20,7 @@ class Cat {
         this.cat.style.left = this.positionX + "px";
         this.cat.style.bottom = this.positionY + "vh";
 
-        this.cat.style.backgroundImage = "url('../images/kitty.png')";
+        this.cat.style.backgroundImage = "url('./images/kitty.png')";
         this.cat.style.backgroundSize = "cover";
 
 

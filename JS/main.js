@@ -10,26 +10,26 @@ class Player {
         this.life = 1;
         this.playerElm = this.createAPlayer();
         this.moveInterval = null;
-        this.detectSafeArea();
         this.newLocation= 0;
-this.createAPlayer();
-        this.newLocation(() => {
-            document.addEventListener('keydown', (event) => {
-                if (event.code === 'Space' && !this.moveInterval) {
-                    this.moveInterval = setInterval(() => {
-                        this.movesToNewPositionAfterSpacebarPressed();
-                    }, 100);
-                }
-            });
-    
-            document.addEventListener('keyup', (event) => {
-                if (event.code === 'Space' && this.moveInterval) {
-                    clearInterval(this.moveInterval);
-                    this.moveInterval = null;
-                }
-            });
-        })
+        this.attachEventListeners();
 
+    }
+
+    attachEventListeners(){
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && !this.moveInterval) {
+                this.moveInterval = setInterval(() => {
+                    this.movesToNewPositionAfterSpacebarPressed();
+                }, 100);
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Space' && this.moveInterval) {
+                clearInterval(this.moveInterval);
+                this.moveInterval = null;
+            }
+        });
     }
 
     createAPlayer() {
@@ -40,7 +40,7 @@ this.createAPlayer();
         playerElm.style.position = "absolute";
         playerElm.style.left = this.positionX + "px";
         playerElm.style.bottom = this.positionY + "vh";
-        playerElm.style.backgroundImage = "url('./images/kitty.png')";
+        playerElm.style.backgroundImage = "url('../images/kitty.png')";
         playerElm.style.backgroundSize = "cover";
         const parentElm = document.getElementById("board");
         parentElm.appendChild(playerElm);
@@ -78,6 +78,7 @@ class Plank {
         this.positionX = 0; // Initial X
         this.positionY = 36;
         this.createPlankElement();
+
     }
     createPlankElement() {
         this.plankElm = document.createElement("div");
@@ -134,6 +135,8 @@ class Platforms {
         this.nextPosition = this.randomPosition(); // Position of the next platform
         this.createStartPlatform(); // Create the start platform
         this.createNextPlatform(); // Create the start platform
+
+        this.playerOnPlatform = false;
 
     }
 

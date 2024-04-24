@@ -1,103 +1,204 @@
 class Player {
     constructor() {
+        const plank = document.getElementById("plank")
+
         this.width = 80;
         this.height = 80;
-        this.positionX = 0 + this.width; //Default Location
-        this.location = plank[startLocation]; // Start Position of X
+        this.positionX =  0 + this.width; // Default Location
+        this.positionY = 36; // Start Position of Y
         this.points = 0;
         this.life = 1;
+        this.playerElm = this.createAPlayer();
+        this.moveInterval = null;
+        this.detectSafeArea();
+        this.newLocation= 0;
+this.createAPlayer();
+        this.newLocation(() => {
+            document.addEventListener('keydown', (event) => {
+                if (event.code === 'Space' && !this.moveInterval) {
+                    this.moveInterval = setInterval(() => {
+                        this.movesToNewPositionAfterSpacebarPressed();
+                    }, 100);
+                }
+            });
+    
+            document.addEventListener('keyup', (event) => {
+                if (event.code === 'Space' && this.moveInterval) {
+                    clearInterval(this.moveInterval);
+                    this.moveInterval = null;
+                }
+            });
+        })
 
-        this.playerElm = document.getElementById("player");
-        const plank = document.getElementById("plank")
-        this.createPlayer();
-
-        this.moveToNewLocation(newLocation);
-        this.newLocation = plank[newLocation];
-
-        this.hasLife(() => {
-            if (this.newLocation <= this.detectSafeArea()) {
-                console.log("Still has life");
-                this.points++
-            }
-        });
     }
 
-    createPlayer() {
-
-        this.playerElm.style.left = this.positionX + "px";
-        this.playerElm.style.width = this.width + "px";
-        this.playerElm.style.height = this.height + "px";
-        this.playerElm.style.backgroundImage = "url('images/kitty.png')";
-        this.playerElm.style.backgroundSize = "cover";
-
-        // Append Child
-
+    createAPlayer() {
+        const playerElm = document.createElement("div");
+        playerElm.id = "player";
+        playerElm.style.width = this.width + "px";
+        playerElm.style.height = this.height + "px";
+        playerElm.style.position = "absolute";
+        playerElm.style.left = this.positionX + "px";
+        playerElm.style.bottom = this.positionY + "vh";
+        playerElm.style.backgroundImage = "url('../images/kitty.png')";
+        playerElm.style.backgroundSize = "cover";
         const parentElm = document.getElementById("board");
-        parentElm.appendChild(this.plankElm);
+        parentElm.appendChild(playerElm);
+        console.log("Player created.");
+        return playerElm;
     }
 
-    moveToNewLocation(newLocation) {
-        if (plank.drawPlank) {
-            return newLocation = plank.endLocation
+    movesToNewPositionAfterSpacebarPressed() {
+        this.positionX = plank.newPlayerLocation();
+        this.playerElm.style.left = this.positionX + "px";
+        console.log("Player moved to new position after spacebar pressed.");
+        this.detectSafeArea();
+    }
+    detectSafeArea() {
+        if (this.positionX <= platforms.safeArea()) {
+            console.log("Player in safe area.");
+            platforms.createNextPlatform(); // Create the next platform
+        } else {
+            console.log("Player in dead zone.");
         }
     }
 
-    d
+    collectPoints() {
+        if (platforms.hasAPoint() || catnip.hasAPoint()) {
+            this.points++;
+            console.log("Player collected a point.");
+        }
+    }
 }
 
 class Plank {
     constructor() {
         this.height = 24;
         this.width = 120;
-        this.spaceDownTime = null;
-        this.spaceUpTime = null;
-        this.location = [
-            positionX = 0,
-            positionY = 36,
-        ];
-        this.createPlank();
-        this.drawPlank();
+        this.positionX = 0; // Initial X
+        this.positionY = 36;
+        this.createPlankElement();
+    }
+    createPlankElement() {
+        this.plankElm = document.createElement("div");
+        this.plankElm.className = "plank";
+        this.plankElm.style.left = this.positionX + "%";
+        this.plankElm.style.bottom = this.positionY + "%";
+        this.plankElm.style.width = this.width + "px";
+        this.plankElm.style.height = this.height + "px";
 
-        this.newWidth = newWidth;
-        this.newLocation();
+        const parentElm = document.getElementById("board");
+        parentElm.appendChild(this.plankElm);
+    };
 
+    drawPlank() {
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                this.getTheNewWidth();
+            }
+        });
+    }
 
+    getTheNewWidth() {
+        let newWidth = this.width;
+        const interval = setInterval(() => {
+            newWidth += 1; // Increase width by 1px
+            if (newWidth >= 200) { // Max width
+                clearInterval(interval);
+            }
+        }, 10);
+        console.log("Plank width increased.");
+        return newWidth;
+    }
 
-        createPlank() {
-            this.plankElm = document.createElement("div");
-            this.plankElm.className = "plank";
-            this.plankElm.style.left = this.location.positionX + "%";
-            this.plankElm.style.bottom = this.location.positionY + "%";
-            this.plankElm.style.width = this.width + "px";
-            this.plankElm.style.height = this.height + "px";
+    startLocation() {
+        return this.positionX;
+    }
 
-            const parentElm = document.getElementById("board");
-            parentElm.appendChild(this.plankElm);
-        };
-        drawPlank(){
-            document.addEventListener('keydown', (event) => {
-                if (event.code === 'Space' && !this.spaceDownTime) {
-                    this.spaceDownTime = new Date();
-                }
-            });
+    endLocation() {
+        return this.getTheNewWidth() - player.width;
+    }
 
-            document.addEventListener('keyup', (event) => {
-                if (event.code === 'Space' && this.spaceDownTime) {
-                    this.spaceUpTime = new Date();
-                    const duration = (this.spaceUpTime - this.spaceDownTime) / 1000; // Duration in seconds
-                    this.newLocation(); // Move player to the end of the plank
-                    this.spaceDownTime = null; // Reset the down time for the next press
-                }
-            })
-        }
-        newLocation(){
-            this.newWidth
-        }
-
-
-
+    newPlayerLocation() {
+        const newLocation = this.endLocation();
+        console.log("New player location calculated.");
+        return newLocation;
     }
 }
 
-const player = new Player;
-const plank = new Plank;
+class Platforms {
+    constructor() {
+        this.minWidth = 20;
+        this.maxWidth = 40;
+        this.currentPosition = 0; // Initial position
+        this.nextPosition = this.randomPosition(); // Position of the next platform
+        this.createStartPlatform(); // Create the start platform
+        this.createNextPlatform(); // Create the start platform
+
+    }
+
+    createStartPlatform() {
+        const platformElm = document.createElement("div");
+        platformElm.className = "platform";
+        platformElm.style.width = "20%"; // Fixed width for start platform
+        platformElm.style.position = "absolute";
+        platformElm.style.left = this.currentPosition + "%";
+        
+        platformElm.style.bottom = "0";
+        const parentElm = document.getElementById("board");
+        parentElm.appendChild(platformElm);
+        console.log("Start platform created.");
+    }
+
+    createNextPlatform() {
+        const platformElm = document.createElement("div");
+        platformElm.className = "platform";
+        platformElm.style.width = this.randomWidth() + "%";
+        platformElm.style.position = "absolute";
+        platformElm.style.left = this.nextPosition;
+        platformElm.style.bottom = "0";
+        const parentElm = document.getElementById("board");
+        parentElm.appendChild(platformElm);
+        console.log("Next platform created.");
+        this.currentPosition = this.nextPosition; // Update current position
+        this.nextPosition = this.randomPosition(); // Calculate position for the next platform
+    }
+    
+
+    randomWidth() {
+        return Math.floor(Math.random() * (this.maxWidth - this.minWidth + 1)) + this.minWidth;
+    }
+
+    randomPosition() {
+        return Math.random() * (100 - this.maxWidth) + "%"; // Random position within the board width
+    }
+
+    safeArea() {
+        return (this.currentPosition + this.width) * this.height;
+    }
+
+    hasAPoint() {
+        return true; // Placeholder for now
+    }
+}
+
+
+class Catnip {
+    constructor() {
+        this.point = 0;
+    }
+
+    createCatnip() {
+        // Create Catnip Element
+    }
+
+    hasAPoint() {
+        return true; // Placeholder for now
+    }
+}
+
+// Instantiating objects
+const platforms = new Platforms(); // Create platforms first
+const player = new Player(); // Then create player
+const plank = new Plank();
+// const catnip = new Catnip();

@@ -1,9 +1,16 @@
+let catLocation = 0;
+let pathLength = 0;
+let counter = 0;
+let startTime = 0;
+let endTime = 0;
+
+
 class Cat {
-    constructor() {
+    constructor(positionX) {
 
         this.width = 80;
         this.height = 80;
-        this.positionX = 0 + this.width; // Default Location
+        this.positionX = catLocation + this.width; // Default Location
         this.positionY = 40; // Start Position
         this.score = 0;
         this.cat = document.createElement("div");
@@ -22,14 +29,11 @@ class Cat {
     }
 
     createACat() {
-
- 
-        console.log("Cat is on screen.");
+        console.log(`Cat is on screen. at ${this.positionX}`);
     }
 
 
 }
- let pathLength = 120;
 
 
 
@@ -37,7 +41,7 @@ class Path {
     constructor(positionX, width) {
         this.positionX = 0 + cat.positionX + cat.width;
         this.positionY = cat.positionY;
-        this.width = 120;
+        this.width = 120 ;
         this.height = 24;
         this.path =  document.createElement("div"); // Initialize path property
         this.lengthActive = false;
@@ -62,10 +66,6 @@ class Path {
 
         console.log(`Here is the start Point X: ${this.positionX} and the path is : ${this.width} px long`)
     }
-
-
-
-
 }
 
 
@@ -74,21 +74,17 @@ class SafeArea {
     constructor(positionX, width) {
         this.positionX = positionX;
         this.width = width;
-        this.createSafeArea(); // Create the start safeArea
-    }
+        this.safeArea = document.createElement("div"); // Create the start safeArea
+        this.safeArea.className = "safe-area";
+        this.safeArea.style.width = this.width + "px"; // Fixed width for start safeArea
+        this.safeArea.style.left = this.positionX + "%";
 
-    createSafeArea() {
-        const safeArea = document.createElement("div");
-        safeArea.className = "safe-area";
-        safeArea.style.width = this.width + "px"; // Fixed width for start safeArea
-        safeArea.style.left = this.positionX + "%";
-
-        safeArea.style.bottom = "0";
+        this.safeArea.style.bottom = "0";
         const parentElm = document.getElementById("board");
-        parentElm.appendChild(safeArea);
+        parentElm.appendChild(this.safeArea);
 
         console.log("Platform created.");
-        console.log(`Min Positon X: ${this.positionX}  Max Position X: ${this.positionX + this.width}`);
+        console.log(`At Positon X: ${this.positionX}  Max Position X: ${this.positionX + this.width}`);
 
     }
 
@@ -100,32 +96,80 @@ class SafeArea {
 
 //USER MOVEMENT
 
+function increasePathLength(){
+document.addEventListener('keydown', event => {
+    if (event.code === 'Space' && !startTime) {
+        startTime = Date.now(); // Record start time
+        console.log(`Space bar pressed down`);
+
+        // Start increasing path width using setInterval
+        const intervalId = setInterval(() => {
+            pathLength += 1; // Increment path length
+            drawPath(path, pathLength); // Update path width
+        }, 10);
+
+        // Event listener for spacebar release
+        document.addEventListener('keyup', event => {
+            if (event.code === 'Space' && startTime) {
+                endTime = Date.now(); // Record end time
+                const duration = endTime - startTime; // Calculate duration of spacebar press
+                console.log(`Space bar released after ${duration} ms`);
+
+                // Clear the interval
+                clearInterval(intervalId);
+
+                // Update width using the duration
+                path.width += pathLength;
+                cat.positionX += pathLength;
+                console.log(`The new width is ${path.width} px`);
+
+                // Reset variables
+                startTime = 0;
+                pathLength = 0;
+            }
+        });
+    }
+});
+}
+function drawPath(pathElement, amount) {
+    pathElement.width += amount;
+    pathElement.path.style.width = pathElement.width + "px";
+}
+
+// Rest of your code...
+
 function drawPath(pathElement,amount){
     pathElement.width += amount;
     pathElement.path.style.width = pathElement.width + "px"
 
 }
-function moveCat(catElement,pathElement){
-    const newPositionX = pathElement.positionX + pathElement.width - catElement.width;
+function holdNewCatPositionX() {
+    cat.positionX = path.positionX + path.width;
+    console.log(`${cat.positionX}`)
+        }
 
-    // Update the position of the cat element
-    catElement.positionX = newPositionX;
-    catElement.cat.style.left = newPositionX + "px";
 
-    console.log(`cat is moving ${newPositionX}`)
-}
+// function isCatOnSafeArea() {
+//     if (path.positionX < safeAreaA.positionX + safeAreaA.width ||
+//         path.positionX + path.width > safeAreaA.positionX ||
+//         path.positionY < safeAreaA.positionY + safeAreaA.height ||
+//         path.positionY + path.height > safeAreaA.positionY) {
+//         console.log("path is on safe Area A")
 
-function isCatOnSafeArea() {
-    if (cat.positionX < safeArea.positionX + safeArea.width &&
-        cat.positionX + cat.width > safeArea.positionX &&
-        cat.positionY < safeArea.positionY + safeArea.height &&
-        cat.positionY + cat.height > safeArea.positionY) {
-        console.log("Cat is on safe Area")
+//     } else if (path.positionX < safeAreaB.positionX + safeAreaB.width ||
+//         path.positionX + path.width > safeAreaB.positionX ||
+//         path.positionY < safeAreaB.positionY + safeAreaB.height ||
+//         path.positionY + path.height > safeAreaB.positionY) {
+//         console.log("path is on safe Area B")
 
-    } else {
-        console.log("game over my fren!")
-    }
-}
+//     } 
+//     else {
+//         console.log("path is not on safe Area")
+//     }
+//     console.log(path.positionX)
+//     console.log(path.positionX + safeAreaA.width)
+
+// }
 
 
 
@@ -138,27 +182,14 @@ const path = new Path();
 
 
 
-function increasePathLength() {
-    document.addEventListener('keydown', event => {
-        if (event.code === 'Space') {
-            pathLength++; // Increase path length
-            console.log(`I am counting the space down`);
-            drawPath(path,pathLength)
-            moveCat(cat,pathLength)
-        }
-    });
-}
 
-increasePathLength(); // Call the function to activate the event listener
-
-document.addEventListener('keyup', event => {
-    if (event.code === 'Space') {
-        console.log(`The length is ${pathLength} px`);
-        // Update width using the increased path length
-        path.width += pathLength;
-        cat.positionX += pathLength;
-        console.log(`The new width is ${pathLength} px`);
-        pathLength = 0; // Reset path length
+function detectPosition(){
+    if(path.positionX <= safeAreaA.positionX + safeAreaA.width && path.width <= safeAreaA.width ){
+    console.log("Path is on safearea A")
+    } else {
+        console.log("Path is off the platform")
     }
-});
-
+}
+// isCatOnSafeArea();
+detectPosition();
+increasePathLength(); // Call the function to activate the event listener

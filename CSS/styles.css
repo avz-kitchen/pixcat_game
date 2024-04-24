@@ -135,14 +135,7 @@ body {
 
 }
 
-.start-platform {
-    position: fixed;
-    top: 64%;
-    width: 24%;
-    height: 36%;
-    background-color: var(--platforms);
-    border-radius: 24px 24px 0px 0px;
-}
+
 
 .plank {
     background-color: var(--plank);
@@ -152,6 +145,7 @@ body {
 
 .platform {
     background-color: var(--platforms);
-
+    border-radius: 24px 24px 0px 0px;
+height: 40%;
     position: absolute;
 }

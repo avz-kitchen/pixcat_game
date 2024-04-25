@@ -88,33 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 parentElm.removeChild(meowText);
             }, 5000);
         }
-        meowDieCat() {
-            const meowText = document.createElement("span");
-            meowText.id = "speech-bubble"
-            meowText.textContent = "MEOOWWWWWWWWWWWWWW";
-            meowText.style.position = "absolute";
-            meowText.style.left = this.positionX + "px";
-            meowText.style.top = 30 + "%"; // Adjust the position to be above the cat
-            meowText.style.color = "black"; // Adjust text color as needed
-
-            const parentElm = document.getElementById("board");
-            parentElm.appendChild(meowText);
-
-            [...meowText.textContent].forEach((char, index) => {
-                setTimeout(() => {
-                    // Create a span for each character
-                    const charSpan = document.createElement("span");
-                    charSpan.textContent = char;
-                    meowText.appendChild(charSpan);
-                }, index * 100); // Adjust the delay as needed
-            });
-            // Remove the "Meow" text after a certain time (e.g., 2 seconds)
-
-            setTimeout(() => {
-                parentElm.removeChild(meowText);
-            }, 5000);
-        }
-
+      
 
     }
 
@@ -223,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
             increasePathLength();
         }
     });
-
 
     function increasePathLength() { //Draw Path
 

@@ -13,14 +13,14 @@ class Cat {
         this.positionX = catLocation + this.width; // Default Location
         this.positionY = 40; // Start Position
         this.score = 0;
-        this.cat = document.createElement("div");
+        this.cat = document.createElement("img");
         this.cat.id = "cat";
 
         this.cat.style.position = "absolute";
         this.cat.style.left = this.positionX + "px";
         this.cat.style.bottom = this.positionY + "vh";
 
-        this.cat.style.backgroundImage = "url('images/kitty.png')";
+        this.cat.src = 'images/kitty.png';
         this.cat.style.backgroundSize = "cover";
 
 
@@ -41,7 +41,7 @@ class Path {
     constructor(positionX, width) {
         this.positionX = 0 + cat.positionX + cat.width;
         this.positionY = cat.positionY;
-        this.width = 120 ;
+        this.width = 80 ;
         this.height = 24;
         this.path =  document.createElement("div"); // Initialize path property
         this.lengthActive = false;
@@ -143,7 +143,7 @@ function drawPath(pathElement,amount){
     pathElement.path.style.width = pathElement.width + "px"
 
 }
-function holdNewCatPositionX() {
+function moveNewCatPositionX(cat) {
     cat.positionX = path.positionX + path.width;
     console.log(`${cat.positionX}`)
         }

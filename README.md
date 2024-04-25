@@ -4,7 +4,7 @@ Welcome to PixCat Crossing Game (Version 1)! This is the first version of the ga
 
 ## Play the Game
 
-You can play PixCat by clicking [here](https://your-game-url).
+You can play PixCat by clicking [here](https://avz-kitchen.github.io/pixcat_game/index.html).
 
 ## Getting Started
 

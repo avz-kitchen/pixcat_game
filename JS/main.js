@@ -1,3 +1,5 @@
+
+
 const board = document.querySelector("board")
 let catLocation = 0;
 let pathLength = 0;
@@ -37,11 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     class Cat {
-        constructor(positionX) {
+        constructor() {
 
             this.width = 80;
             this.height = 80;
-            this.positionX = catLocation; // Default Location
+            this.positionX = catLocation + this.width; // Default Location
             this.positionY = 40; // Start Position
             this.catElm = document.createElement("img");
             this.catElm.id = "cat";
@@ -56,7 +58,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const parentElm = document.getElementById("board");
             parentElm.appendChild(this.catElm);
+
+            //MEOW CAT
+            this.meowCat();
         }
+        meowCat() {
+            const meowText = document.createElement("span");
+            meowText.id = "speech-bubble"
+            meowText.textContent = "Meow.. Purrrrrrr....";
+            meowText.style.position = "absolute";
+            meowText.style.left = this.positionX + "px";
+            meowText.style.top = 30 + "%"; // Adjust the position to be above the cat
+            meowText.style.color = "black"; // Adjust text color as needed
+
+            const parentElm = document.getElementById("board");
+            parentElm.appendChild(meowText);
+
+            [...meowText.textContent].forEach((char, index) => {
+                setTimeout(() => {
+                    // Create a span for each character
+                    const charSpan = document.createElement("span");
+                    charSpan.textContent = char;
+                    meowText.appendChild(charSpan);
+                }, index * 260); // Adjust the delay as needed
+            });
+            // Remove the "Meow" text after a certain time (e.g., 2 seconds)
+
+            setTimeout(() => {
+                parentElm.removeChild(meowText);
+            }, 5000);
+        }
+        meowDieCat() {
+            const meowText = document.createElement("span");
+            meowText.id = "speech-bubble"
+            meowText.textContent = "MEOOWWWWWWWWWWWWWW";
+            meowText.style.position = "absolute";
+            meowText.style.left = this.positionX + "px";
+            meowText.style.top = 30 + "%"; // Adjust the position to be above the cat
+            meowText.style.color = "black"; // Adjust text color as needed
+
+            const parentElm = document.getElementById("board");
+            parentElm.appendChild(meowText);
+
+            [...meowText.textContent].forEach((char, index) => {
+                setTimeout(() => {
+                    // Create a span for each character
+                    const charSpan = document.createElement("span");
+                    charSpan.textContent = char;
+                    meowText.appendChild(charSpan);
+                }, index * 100); // Adjust the delay as needed
+            });
+            // Remove the "Meow" text after a certain time (e.g., 2 seconds)
+
+            setTimeout(() => {
+                parentElm.removeChild(meowText);
+            }, 5000);
+        }
+
 
     }
 
@@ -116,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // detect collision with safe Area B
         if (cat.positionX <= safeAreaB.positionX + safeAreaB.width && cat.positionX + cat.width >= safeAreaB.positionX) {
             console.log("Cat is on safe Area B");
-            increasePoints(10);
+            increasePoints(120);
             return true;
         }
 
@@ -194,20 +252,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, intervalDelay);
     }
+    let isCatFalling = false;
     function fallingCat() {
 
-        const catFallInterval = setInterval(function () {
-            // cat Falling
-            cat.positionY -= 0;
-            cat.catElm.style.bottom = cat.positionY + "px";
-            fallingCat();
-        }, 94);
-        if (cat.positionY > board.style.height) {
-            clearInterval(catFallInterval);
+        if (!isCatFalling) {
+            const catFallInterval = setInterval(function () {
+                // cat Falling
+                cat.positionY -= 0;
+                cat.catElm.style.bottom = cat.positionY + "px";
+                fallingCat();
+            }, 94);
         }
-
+        return gameover();
     }
-    function gameover() {
+    function gameover(fallingCat) {
 
         setInterval(function () {
             // Redirect to gameover page

@@ -1,17 +1,24 @@
+const board = document.querySelector("board")
 let catLocation = 0;
 let pathLength = 0;
 let isUpdating = false;
 let durationOfKeyPress = 0;
 let startTime = 0;
 let endTime = 0;
+let scorePoint = document.getElementById("score");
+let score = 0;
 
+
+const minNumber = 200;
+const maxNumber = 600;
+const randomNumber = Math.random() * (maxNumber - minNumber) + minNumber;
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     class SafeArea {
-        constructor(positionX, width) {
+        constructor(positionX) {
             this.positionX = positionX;
-            this.width = width;
+            this.width = randomNumber;
             this.safeArea = document.createElement("div"); // Create the start safeArea
             this.safeArea.className = "safe-area";
             this.safeArea.style.width = this.width + "px"; // Fixed width for start safeArea
@@ -36,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.height = 80;
             this.positionX = catLocation; // Default Location
             this.positionY = 40; // Start Position
-            this.score = 0;
             this.catElm = document.createElement("img");
             this.catElm.id = "cat";
 
@@ -51,11 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const parentElm = document.getElementById("board");
             parentElm.appendChild(this.catElm);
         }
-
-        createACat() {
-            console.log(`Cat is on screen. at ${this.positionX}`);
-        }
-
 
     }
 
@@ -85,90 +86,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
 
-        startPath() {
-            // Create a path element
 
-            console.log(`Here is the start Point X: ${this.positionX} and the path is : ${this.width} px long`)
-        }
     }
 
 
 
+    // User movement
 
-
-
-    //Update width of path
-
-
-    // function moveCat(){
-    
-    //     cat.positionX++;
-    //     cat.catElm.style.left = cat.positionX;
-    //     const hasFallen = isCatOnSafeArea()
-    
-    //     // if cat is not at the end of the plank & has not fallen
-    //     if(  cat.positionX < path.positionX + path.width && hasFallen){
-    //         moveCat();
-    //     }
-    // }
-    
     function moveCat() {
         cat.positionX += path.positionX + path.width; // Add position to cat
         cat.catElm.style.left = cat.positionX + "px";
         console.log(`cat should move to ${cat.positionX} `);
         const hasFallen = isCatOnSafeArea();
 
-        if(isCatOnSafeArea === hasFallen){
+        if (isCatOnSafeArea === hasFallen) {
             moveCat();
         }
 
     }
-    
-    function isCatOnSafeArea(){
-    
+
+    function isCatOnSafeArea() {
+
         // detect collision with safe Area A
-        if(cat.positionX <= safeAreaA.positionX + safeAreaA.width && cat.positionX + cat.width >= safeAreaA.positionX ){
-            console.log("Cat is on safe Area A")
-
-            return true; 
+        if (cat.positionX <= safeAreaA.positionX + safeAreaA.width && cat.positionX + cat.width >= safeAreaA.positionX && cat.positionX + cat.width < safeAreaA.width) {
+            console.log("Cat is on safe Area A");
+            return true;
         }
-    
+
         // detect collision with safe Area B
-        if(cat.positionX <= safeAreaB.positionX + safeAreaB.width && cat.positionX + cat.width >= safeAreaB.positionX){
-            console.log("Cat is on safe Area B")
-
-            return true; 
+        if (cat.positionX <= safeAreaB.positionX + safeAreaB.width && cat.positionX + cat.width >= safeAreaB.positionX) {
+            console.log("Cat is on safe Area B");
+            increasePoints(10);
+            return true;
         }
-    
+
         // detect collision with plank
-        if(cat.positionX <= path.positionX + path.width && cat.positionX <= path.positionX){
-           console.log("Cat is on Plank")
-
-           return true; 
+        if (cat.positionX <= path.positionX + path.width && cat.positionX <= path.positionX) {
+            console.log("Cat is on Plank");
+            return true;
         }
-    
+
         // gameover
-        console.log("Cat has dieded")
-       document.location.href = "gameover.html";
-        return false;
-    
+        console.log("Cat has dieded");
+        return fallingCat();
+
+    }
+
+    function increasePoints(points) {
+        score += points;
+        scorePoint.textContent = `Score: ${score}`;
     }
 
 
     // Instantiating objects
-    const safeAreaA = new SafeArea(0, 400); // Create platforms first
-    const safeAreaB = new SafeArea(640, 120); // 
+    const safeAreaA = new SafeArea(0); // Create platform first
+    const safeAreaB = new SafeArea(860); //  Creatte platform second
     const cat = new Cat(); // Then create cat
 
     const path = new Path();
 
 
 
-  
+
     //USER MOVEMENT
 
     document.addEventListener('keydown', event => {
-        if (event.code === 'Space' && !startTime) {
+        if (event.code === 'Space' && !startTime && !isUpdating) {
             startTime = new Date(); // Record start time
         }
     });
@@ -198,8 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             path.width += 5; // Increment path length
             path.pathElm.style.width = path.width + "px";
-
-            if(growingTimeCounter > durationOfKeyPress){
+            if (growingTimeCounter > durationOfKeyPress) {
                 clearInterval(intervalId);
 
                 // Reset variables
@@ -212,11 +194,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, intervalDelay);
     }
+    function fallingCat() {
+
+        const catFallInterval = setInterval(function () {
+            // cat Falling
+            cat.positionY -= 0;
+            cat.catElm.style.bottom = cat.positionY + "px";
+            fallingCat();
+        }, 94);
+        if (cat.positionY > board.style.height) {
+            clearInterval(catFallInterval);
+        }
+
+    }
+    function gameover() {
+
+        setInterval(function () {
+            // Redirect to gameover page
+            document.location.href = "gameover.html";
+        }, 2000);
 
 
+    };
 
-
-
-    // isCatOnSafeArea();
-    // increasePathLength(); // Call the function to activate the event listener
 })

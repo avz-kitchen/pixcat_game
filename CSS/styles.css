@@ -36,7 +36,7 @@ h1,
 h2,
 h3 {
     font-family: "Jersey 25", sans-serif;
-text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 h1 {
@@ -55,9 +55,10 @@ a {
     font-size: 56px;
 }
 
-p,span,
+p,
+span,
 li {
-    font-family: "Roboto", sans-serif;
+    font-family: "Jersey 25", sans-serif;
 
     font-size: 24px;
     font-style: normal;
@@ -80,13 +81,16 @@ body {
     color: var(--dark-text);
 
 }
-.fill-bg{
+
+.fill-bg {
     padding: 80px;
     border-radius: 60px;
     text-decoration: underline;
     text-decoration-color: var(--plank);
 }
-.primary-btn , a {
+
+.primary-btn,
+a {
     display: flex;
     padding: 12px 36px;
     justify-content: center;
@@ -110,6 +114,7 @@ body {
     text-align: center;
 
 }
+
 .guide {
     width: 60%;
     height: 60%;
@@ -125,6 +130,7 @@ body {
 }
 
 .guide img {
-height: 200px;
-width: auto;
+    height: 160px;
+    width: auto;
+    padding: 16px;
 }

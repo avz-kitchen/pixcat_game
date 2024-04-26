@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 parentElm.removeChild(meowText);
             }, 5000);
         }
-      
+
 
     }
 

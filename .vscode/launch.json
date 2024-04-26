@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "https://avz-kitchen.github.io/pixcat_game/game.html",
+            "request": "launch",
+            "url": "https://avz-kitchen.github.io/pixcat_game/game.html"
+        }
+    ]
+}
